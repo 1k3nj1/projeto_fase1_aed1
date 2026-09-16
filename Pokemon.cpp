@@ -18,14 +18,14 @@ Pokemon::Pokemon(){
 }
 
 
-string Pokemon::get_nome(){
+string Pokemon::get_nome() const{
     return nome;
 }
 
-int Pokemon::get_tipo(){
+int Pokemon::get_tipo() const{
     return tipo;
 }
 
-string Pokemon::get_imagem(){
+string Pokemon::get_imagem() const{
     return imagem_path;
 }

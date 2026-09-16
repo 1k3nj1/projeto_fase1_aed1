@@ -1,19 +1,21 @@
+#ifndef POKEMON_UTIL
+#define POKEMON_UTIL
+
 #include <iostream>
 #include <string>
 
-using namespace std;
-
 class Pokemon{
     private:
-        string nome;
+        std::string nome;
         int tipo;
-        string imagem_path;
+        std::string imagem_path;
     
     public:
-        Pokemon(string n, int t, string i);
-        string get_nome();
-        int get_tipo();
-        string get_imagem();
+        Pokemon(std::string n, int t, std::string i);
+        std::string get_nome() const;
+        int get_tipo() const;
+        std::string get_imagem() const;
         Pokemon();
 };
 
+#endif

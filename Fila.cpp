@@ -3,6 +3,8 @@
 #include "Fila.h"
 #include "Pokemon.h"
 
+using namespace std;
+
 Fila::Fila(int t){
     inicio = nullptr;
     fim = nullptr;
@@ -13,7 +15,7 @@ Fila::Fila(int t){
 void Fila::enfileira(Pokemon p, bool *ok){
     if(cheia()){
         *ok = false;
-        return
+        return;
     }
 
     NodePtr novo = new NodePokemon;
@@ -32,7 +34,7 @@ void Fila::enfileira(Pokemon p, bool *ok){
     *ok = true;
 }
 
-void NodePokemon Fila::desenfileirar(Pokemon *p, bool *ok){
+void Fila::desenfileira(Pokemon *p, bool *ok){
     if(vazia()){
         *ok = false;
         return;
@@ -60,6 +62,6 @@ bool Fila::vazia(){
     return (inicio == nullptr);
 }
 
-int Fila::get_tamanho(){
+int Fila::get_tamanho() const{
     return tamanho;
 }

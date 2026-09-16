@@ -1,8 +1,9 @@
+#ifndef FILA_UTIL
+#define FILA_UTIL
+
 #include <iostream>
 #include <string>
 #include "Pokemon.h"
-
-using namespace std;
 
 struct NodePokemon{
     Pokemon poke;
@@ -21,9 +22,11 @@ class Fila {
     public:
         Fila(int t);
         void enfileira(Pokemon p, bool *ok);
-        void desenfileirar(Pokemon *p, bool *ok);
+        void desenfileira(Pokemon *p, bool *ok);
         bool cheia();
         bool vazia();
 
-        int get_tamanho();
+        int get_tamanho() const;
 };
+
+#endif
