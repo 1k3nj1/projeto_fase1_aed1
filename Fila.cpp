@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
-#include "Fila.h"
-#include "Pokemon.h"
+#include "Fila.hpp"
+#include "PokemonEntity.hpp"
 
 using namespace std;
 
@@ -12,7 +12,7 @@ Fila::Fila(int t){
     capacidade_maxima = t;
 }
 
-void Fila::enfileira(Pokemon p, bool *ok){
+void Fila::enfileira(PokemonEntity p, bool *ok){
     if(cheia()){
         *ok = false;
         return;
@@ -34,7 +34,7 @@ void Fila::enfileira(Pokemon p, bool *ok){
     *ok = true;
 }
 
-void Fila::desenfileira(Pokemon *p, bool *ok){
+void Fila::desenfileira(PokemonEntity *p, bool *ok){
     if(vazia()){
         *ok = false;
         return;

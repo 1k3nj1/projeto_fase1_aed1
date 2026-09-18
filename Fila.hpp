@@ -2,10 +2,10 @@
 
 #include <iostream>
 #include <string>
-#include "Pokemon.h"
+#include "PokemonEntity.hpp"
 
 struct NodePokemon{
-    Pokemon poke;
+    PokemonEntity poke;
     NodePokemon* next;
 };
 
@@ -20,8 +20,8 @@ class Fila {
     
     public:
         Fila(int t);
-        void enfileira(Pokemon p, bool *ok);
-        void desenfileira(Pokemon *p, bool *ok);
+        void enfileira(PokemonEntity p, bool *ok);
+        void desenfileira(PokemonEntity *p, bool *ok);
         bool cheia();
         bool vazia();
 
