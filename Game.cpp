@@ -1,29 +1,45 @@
-#include "InputManager.hpp"
+#include "Game.hpp"
+#include "SplashState.hpp"
 
 namespace Pokemon
 {
-    bool InputManager::IsSpriteClicked(
-        const sf::Sprite& object,
-        sf::Mouse::Button button,
-        sf::RenderWindow& window
-    )
+    Game::Game( int width, int height, std::string title)
     {
-        if (sf::Mouse::isButtonPressed(button))
-        {
-            sf::Vector2f mousePosition =
-                window.mapPixelToCoords(
-                    sf::Mouse::getPosition(window)
-                );
-
-            return object.getGlobalBounds().contains(mousePosition);
-        }
-
-        return false;
+        _data->window.create(sf::VideoMode({static_cast<unsigned int>(width),static_cast<unsigned int>(height)}),
+                title, sf::Style::Close | sf::Style::Titlebar);
+        _data->machine.AddState(StateRef(new SplashState(this->_data)));
+        
+        this->Run();
     }
-
-    sf::Vector2i InputManager::GetMousePosition(
-        sf::RenderWindow& window)
+    void Game::Run()
     {
-        return sf::Mouse::getPosition(window);
+        float newTime, frameTime, interpolation;
+        float currentTime = this->_clock.getElapsedTime().asSeconds();
+        float accumulator = 0.0f;
+        
+        while (this->_data->window.isOpen())
+        {
+            this->_data->machine.ProcessStateChanges();
+            newTime = this->_clock.getElapsedTime().asSeconds();
+            frameTime = newTime - currentTime;
+            
+            if( frameTime > 0.25f)
+            {
+                frameTime = 0.25f;
+            }
+            
+            currentTime = newTime;
+            accumulator += frameTime;
+
+            while(accumulator >= this->dt)
+            {
+                this->_data->machine.GetActiveState()->HandleInput();
+                this->_data->machine.GetActiveState()->Update(this->dt);
+                accumulator -= this->dt;
+            }
+
+            interpolation = accumulator / this->dt;
+            this->_data->machine.GetActiveState()->Draw(interpolation);
+        }
     }
 }
