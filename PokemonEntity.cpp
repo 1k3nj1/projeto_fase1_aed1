@@ -1,31 +1,31 @@
 #include <iostream>
 #include <string>
-#include "Pokemon.h"
+#include "PokemonEntity.hpp"
 
 using namespace std;
 
-Pokemon::Pokemon(string name, int type, string path){
+PokemonEntity::PokemonEntity(string name, int type, string path){
     nome = name;
     tipo = type;
     imagem_path = path;
 }
 
 // Provavelmente não será utilizado no projeto, mas está aqui por precaução
-Pokemon::Pokemon(){
+PokemonEntity::PokemonEntity(){
     nome = "";
     tipo = 0;
     imagem_path = "";
 }
 
 
-string Pokemon::get_nome() const{
+string PokemonEntity::get_nome() const{
     return nome;
 }
 
-int Pokemon::get_tipo() const{
+int PokemonEntity::get_tipo() const{
     return tipo;
 }
 
-string Pokemon::get_imagem() const{
+string PokemonEntity::get_imagem() const{
     return imagem_path;
 }

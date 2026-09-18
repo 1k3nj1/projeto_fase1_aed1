@@ -1,5 +1,4 @@
-#ifndef FILA_UTIL
-#define FILA_UTIL
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -28,5 +27,3 @@ class Fila {
 
         int get_tamanho() const;
 };
-
-#endif
