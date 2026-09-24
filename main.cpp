@@ -40,7 +40,8 @@ int main() {
     sf::Clock relogio;
 
     while (window.isOpen()) {
-        // --- 1. EVENTOS ---
+        
+        // verificando pressionar o close
         while (const auto event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) {
                 window.close();
