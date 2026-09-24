@@ -65,3 +65,7 @@ bool Fila::vazia(){
 int Fila::get_tamanho() const{
     return tamanho;
 }
+
+void Fila::pegaPrimeiro(PokemonEntity &p) const{
+    p = inicio->poke;
+}

@@ -26,4 +26,6 @@ class Fila {
         bool vazia();
 
         int get_tamanho() const;
+
+        void pegaPrimeiro(PokemonEntity &p) const;
 };
