@@ -19,18 +19,13 @@ class Fila {
         int capacidade_maxima;
     
     public:
-        // Construtor e destrutor
         Fila(int t);
-        
-        // Get
-        int get_tamanho() const;
-        
-        // Operações elementares da fila
         void enfileira(PokemonEntity p, bool *ok);
         void desenfileira(PokemonEntity *p, bool *ok);
         bool cheia();
         bool vazia();
 
-        // Operações adicionais p/ o jogo
-        void destroi();
+        int get_tamanho() const;
+
+        void pegaPrimeiro(PokemonEntity &p) const;
 };
