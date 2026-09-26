@@ -66,11 +66,6 @@ int Fila::get_tamanho() const{
     return tamanho;
 }
 
-void Fila::destroi(){
-    while(!vazia()){
-        PokemonEntity *paux;
-        bool *baux;
-
-        desenfileira(paux, baux);
-    }
+void Fila::pegaPrimeiro(PokemonEntity &p) const{
+    p = inicio->poke;
 }
