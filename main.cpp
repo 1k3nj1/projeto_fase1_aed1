@@ -25,6 +25,8 @@ int main() {
     Fila random_escolha(6);
     randomiza_fila_escolha(game, random_escolha);
 
+    Fila time_jogador_aux(6);
+
     // Fonte temporária (ou não)
     if (!game.fonte.openFromFile("src/arial.ttf")) {
         std::cerr << "Erro ao carregar fonte em src/arial.ttf!\n";
@@ -32,6 +34,7 @@ int main() {
 
     // Criando botões
     Botao btn_batalhar({540.f, 600.f}, {150.f, 50.f}, "Batalhar", game.fonte);
+    Botao btn_resultado({500.f, 400.f}, {220.f, 50.f}, "Resultado", game.fonte);
     Botao btn_comecar({500.f, 500.f}, {220.f, 50.f}, "Play", game.fonte);
     Botao btn_continuar({500.f, 600.f}, {220.f, 50.f}, "Ir para captura", game.fonte);
     Botao btn_capturar({400.f, 600.f}, {150.f, 50.f}, "Capturar", game.fonte);
@@ -46,6 +49,7 @@ int main() {
     }
 
     sf::Clock relogio;
+    sf::Clock timer_batalha;
     bool batalhou = false;
 
     while(window.isOpen()) {
@@ -95,7 +99,14 @@ int main() {
                     }
                     else if(game.estado_atual == Estado::BATALHA && btn_batalhar.clicado(window)){
                         std::cout << "Botao de batalhar clicado" << std::endl;
+
+                        calcular_resultado_batalha(game);
+
+                        relogio.restart();
                         batalhou = true;
+                    }
+                    else if(game.estado_atual == Estado::BATALHA && btn_resultado.clicado(window)){
+                        game.estado_atual = Estado::TELA_FINAL;
                     }
 
                     std::cout << "the left button was pressed" << std::endl;
@@ -181,6 +192,9 @@ int main() {
                 break;
             }
             case Estado::BATALHA: {
+                PokemonEntity aux2;
+                bool baux2;
+                if(!game.fila_jogador.vazia()){
                 game.fila_jogador.pegaPrimeiro(game.poke_atual_jogador);
                 game.fila_PC.pegaPrimeiro(game.poke_atual_PC);
                 
@@ -217,10 +231,29 @@ int main() {
                 window.draw(poke_pc_sprite);
                 window.draw(poke_jogador_nome);
                 window.draw(poke_pc_nome);
-                if(batalhou)
-                    exibir_resultado_batalha(game, window);
+                if(batalhou){
+                    float tempo = relogio.getElapsedTime().asSeconds();
 
+                    std::cout << "Tempo: " << tempo << std::endl;
+
+                    window.draw(game.resultado_batalha);
+
+                    if(tempo >= 2.0f){
+                        std::cout << "PASSOU DOS 2 SEGUNDOS!" << std::endl;
+                        game.fila_jogador.desenfileira(&aux2, &baux2);
+                        time_jogador_aux.enfileira(aux2, &baux2);
+                        game.fila_PC.desenfileira(&aux2, &baux2);
+                        batalhou = false;
+                    }
+                }
+                }
+            else{
+                btn_resultado.desenhar(window);
+                }
                 break;
+            }
+            case Estado::TELA_FINAL: {
+                std::cout << "Tela final" << std::endl;
             }
         }
 
