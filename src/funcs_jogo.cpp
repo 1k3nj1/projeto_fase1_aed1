@@ -160,25 +160,24 @@ void adicionar_tipo(PokemonEntity p, sf::Text &tipo_texto){
         tipo_texto.setFillColor(sf::Color(0, 0, 255));
     }
 }
-void exibir_resultado_batalha(GameData &game, sf::RenderWindow &window){
+void calcular_resultado_batalha(GameData &game){
     int resultado = calcula_vantagem(game.poke_atual_jogador.get_tipo(), game.poke_atual_PC.get_tipo());
     if(resultado == 1){
-      game.pontos_jogador++;
-      sf::Text resultado(game.fonte, "Voce Venceu Essa Rodada!");
-      resultado.setFillColor(sf::Color(0, 255, 0));
-      resultado.setPosition({450.f, 300.f});
-      window.draw(resultado);
+        game.pontos_jogador++;
+        game.resultado_batalha.setString("Voce Venceu Essa Rodada!");
+        game.resultado_batalha.setFillColor(sf::Color(0, 255, 0));
     }
     else if(resultado == 2){
-        sf::Text resultado(game.fonte, "Empate!");
-        resultado.setPosition({450.f, 300.f});
-          window.draw(resultado);
+        game.resultado_batalha.setString("Empate!");
+        game.resultado_batalha.setFillColor(sf::Color(255, 255, 255));
     }
     else if(resultado == 0){
         game.pontos_PC++;
-        sf::Text resultado(game.fonte, "Voce Perdeu Essa Rodada!");
-        resultado.setFillColor(sf::Color(255, 0, 0));
-        resultado.setPosition({450.f, 300.f});
-        window.draw(resultado);
+        game.resultado_batalha.setString("Voce Perdeu Essa Rodada!");
+        game.resultado_batalha.setFillColor(sf::Color(255, 0, 0));
     }
+    game.resultado_batalha.setPosition({450.f, 300.f});
+}
+void exibir_resultado_batalha(GameData &game, sf::RenderWindow &window){
+
 }
