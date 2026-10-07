@@ -15,10 +15,15 @@ Em ambiente linux, instale e configure o SFML 3. Após isso, basta utilizar o co
 para compilar e executar o jogo.
 
 
-### Funcionalidades
+## Estruturação do projeto
+
+(para fazer depois) descrever estrutura do projeto, como divisão de arquivos e diretórios 
 
 
-#### Estrutura Fila
+## Funcionalidades
+
+
+### Estrutura Fila
 
 O jogo se baseia no uso de filas para o armazenamento temporários dos Pokemons, tanto do time do jogador quanto do time do computador.
 
@@ -33,7 +38,7 @@ A fila foi implementada como uma classe em arquivos dedicados, `Fila.h` e `Fila.
 | `get_tamanho()` | retorna o tamanho atual da fila |
 | `pegaPrimeiro(PokemonEntity &p)` | retorna o primeiro Pokemon da fila em p, sem removê-lo |
 
-#### Gerenciamento dos estados do jogo
+### Gerenciamento dos estados do jogo
 
 Foi utilizada uma classe enum Estado para controlar o progresso dos estados do jogo. Os estados do jogo são os seguintes:
 
