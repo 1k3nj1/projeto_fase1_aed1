@@ -38,30 +38,45 @@ void Botao::desenhar(sf::RenderWindow& window) const {
 
 // Carregando a pokedex
 void carregar_dex(GameData& game){
-    game.Pokedex.push_back(PokemonEntity("Bulbasaur", TipoPokemon::PLANTA, "imagens/bulbasaur.png"));
-    game.Pokedex.push_back(PokemonEntity("Charmander", TipoPokemon::FOGO, "imagens/charmander.png"));
-    game.Pokedex.push_back(PokemonEntity("Squirtle", TipoPokemon::AGUA, "imagens/squirtle.png"));
-    game.Pokedex.push_back(PokemonEntity("Chikorita", TipoPokemon::PLANTA, "imagens/chikorita.png"));
-    game.Pokedex.push_back(PokemonEntity("Cyndaquil", TipoPokemon::FOGO, "imagens/cyndaquil.png"));
-    game.Pokedex.push_back(PokemonEntity("Totodile", TipoPokemon::AGUA, "imagens/totodile.png"));
+    game.Pokedex[0] = PokemonEntity("Bulbasaur", TipoPokemon::PLANTA, "imagens/bulbasaur.png");
+    game.Pokedex[1] = PokemonEntity("Charmander", TipoPokemon::FOGO, "imagens/charmander.png");
+    game.Pokedex[2] = PokemonEntity("Squirtle", TipoPokemon::AGUA, "imagens/squirtle.png");
+    game.Pokedex[3] = PokemonEntity("Chikorita", TipoPokemon::PLANTA, "imagens/chikorita.png");
+    game.Pokedex[4] = PokemonEntity("Cyndaquil", TipoPokemon::FOGO, "imagens/cyndaquil.png");
+    game.Pokedex[5] = PokemonEntity("Totodile", TipoPokemon::AGUA, "imagens/totodile.png");
+    game.Pokedex[6] = PokemonEntity("Treecko", TipoPokemon::PLANTA, "imagens/treecko.png");
+    game.Pokedex[7] = PokemonEntity("Torchic", TipoPokemon::FOGO, "imagens/torchic.png");
+    game.Pokedex[8] = PokemonEntity("Mudkip", TipoPokemon::AGUA, "imagens/mudkip.png");
+    game.Pokedex[9] = PokemonEntity("Turtwig", TipoPokemon::PLANTA, "imagens/turtwig.png");
+    game.Pokedex[10] = PokemonEntity("Chimchar", TipoPokemon::FOGO, "imagens/chimchar.png");
+    game.Pokedex[11] = PokemonEntity("Piplup", TipoPokemon::AGUA, "imagens/piplup.png");
 }
 
 // criando filas aleatórias
 void randomiza_fila(GameData &game){
-    std::vector<PokemonEntity> copia;
+    //std::vector<PokemonEntity> copia;
+    PokemonEntity copia[QTD_POKEMONS];
 
+    
+    for(int i = 0; i < QTD_POKEMONS; i++){
+        copia[i] = game.Pokedex[i];
+    }
+    
+
+    /*
     for(PokemonEntity p: game.Pokedex){
         copia.push_back(p);
     }
+    */
 
-    for (int i = copia.size() - 1; i > 0; i--) {
+    for (int i = QTD_POKEMONS - 1; i > 0; i--) {
         int j = rand() % (i + 1);
         PokemonEntity tmp = copia[i];
         copia[i] = copia[j];
         copia[j] = tmp;
     }
 
-    for(int i = 0; i < 5; i++){
+    for(int i = 0; i < TAMANHO_TIMES; i++){
         bool aux;
         game.fila_PC.enfileira(copia[i], &aux);
     }
@@ -69,7 +84,7 @@ void randomiza_fila(GameData &game){
 
 // Procedimento para exibir time do computador no início
 void exibir_time_pc(GameData &game, sf::RenderWindow &window){
-    Fila temp(5);
+    Fila temp(TAMANHO_TIMES);
     
     float posicaoX = 100.f;
     float posicaoY = 250.f;
@@ -131,24 +146,45 @@ void exibir_time_pc(GameData &game, sf::RenderWindow &window){
 }
 
 void randomiza_fila_escolha(GameData &game, Fila &f){
-    std::vector<PokemonEntity> copia;
 
+    PokemonEntity copia[QTD_POKEMONS];
+
+    
+    for(int i = 0; i < QTD_POKEMONS; i++){
+        copia[i] = game.Pokedex[i];
+    }
+    
+
+    //std::vector<PokemonEntity> copia;
+
+    /*
     for(PokemonEntity p: game.Pokedex){
         copia.push_back(p);
     }
+    */
 
-    for (int i = copia.size() - 1; i > 0; i--) {
+    for (int i = QTD_POKEMONS - 1; i > 0; i--) {
         int j = rand() % (i + 1);
         PokemonEntity tmp = copia[i];
         copia[i] = copia[j];
         copia[j] = tmp;
     }
 
+    
+    for(int i = 0; i < QTD_POKEMONS; i++){
+        bool aux;
+        f.enfileira(copia[i], &aux);
+    }
+    
+
+    /*
     for(PokemonEntity p: copia){
         bool aux;
         f.enfileira(p, &aux);
     }
+    */
 }
+
 void adicionar_tipo(PokemonEntity p, sf::Text &tipo_texto){
     if(p.get_tipo() == TipoPokemon::FOGO){
         tipo_texto.setFillColor(sf::Color(255, 0, 0));
@@ -178,6 +214,7 @@ void calcular_resultado_batalha(GameData &game){
     }
     game.resultado_batalha.setPosition({450.f, 300.f});
 }
+
 void exibir_resultado_batalha(GameData &game, sf::RenderWindow &window){
 
 }

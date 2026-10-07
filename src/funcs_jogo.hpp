@@ -35,10 +35,11 @@ struct Botao {
 struct GameData{
     Estado estado_atual{Estado::TELA_INICIAL};
     
-    Fila fila_jogador{5};
-    Fila fila_PC{5};
+    Fila fila_jogador{TAMANHO_TIMES};
+    Fila fila_PC{TAMANHO_TIMES};
 
-    std::vector<PokemonEntity> Pokedex;
+    //std::vector<PokemonEntity> Pokedex;
+    PokemonEntity Pokedex[QTD_POKEMONS];
     int indice_atual{0};
     int tentativas_restantes{3};
     std::string mensagem_captura{""};

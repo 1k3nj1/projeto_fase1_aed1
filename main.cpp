@@ -40,9 +40,8 @@ int main() {
     Botao btn_capturar({400.f, 600.f}, {150.f, 50.f}, "Capturar", game.fonte);
     Botao btn_pular({650.f, 600.f}, {150.f, 50.f}, "Pular", game.fonte);
 
-
     // Carrega tela inicial
-    if (game.splash_textura.loadFromFile(CAMINHO_IMAGEM)) {
+    if (game.splash_textura.loadFromFile(CAMINHO_TELA_INICIAL)) {
         game.splash_sprite.setTexture(game.splash_textura, true);
         auto sz = game.splash_textura.getSize();
         game.splash_sprite.setScale({static_cast<float>(SCREEN_WIDTH) / sz.x, static_cast<float>(SCREEN_HEIGHT) / sz.y});
@@ -102,7 +101,7 @@ int main() {
 
                         calcular_resultado_batalha(game);
 
-                        relogio.restart();
+                        timer_batalha.restart();
                         batalhou = true;
                     }
                     else if(game.estado_atual == Estado::BATALHA && btn_resultado.clicado(window)){
@@ -131,12 +130,13 @@ int main() {
             }
         }
 
-        /*
-        
-        if(game.estado_atual == Estado::VER_TIME_PC){
-            
+        if(game.estado_atual == Estado::BATALHA){
+            if (game.textura_atual.loadFromFile(CAMINHO_TELA_BATALHA)) {
+                game.sprite_atual.setTexture(game.textura_atual, true);
+                auto sz = game.textura_atual.getSize();
+                game.sprite_atual.setScale({static_cast<float>(SCREEN_WIDTH) / sz.x, static_cast<float>(SCREEN_HEIGHT) / sz.y});
+            }
         }
-        */
 
         // limpando o frame anterior
         window.clear(sf::Color(30, 30, 30));
@@ -173,7 +173,6 @@ int main() {
                     random_escolha.pegaPrimeiro(paux);
                 }
 
-
                 sf::Text nome_p(game.fonte, paux.get_nome());
                 nome_p.setPosition({600.f, 100.f});
                 game.textura_atual.loadFromFile(paux.get_imagem());
@@ -191,66 +190,72 @@ int main() {
                 window.draw(nome_p);
                 break;
             }
+
             case Estado::BATALHA: {
+                game.sprite_atual.setPosition({0.0, 0.0});
+                window.draw(game.sprite_atual);
+
                 PokemonEntity aux2;
                 bool baux2;
                 if(!game.fila_jogador.vazia()){
-                game.fila_jogador.pegaPrimeiro(game.poke_atual_jogador);
-                game.fila_PC.pegaPrimeiro(game.poke_atual_PC);
-                
-                sf::Texture poke_jogador_texture;
-                sf::Texture poke_pc_texture;
 
-                sf::Text poke_jogador_nome(game.fonte, game.poke_atual_jogador.get_nome());
-                sf::Text poke_pc_nome(game.fonte, game.poke_atual_PC.get_nome());
+                    game.fila_jogador.pegaPrimeiro(game.poke_atual_jogador);
+                    game.fila_PC.pegaPrimeiro(game.poke_atual_PC);
+                    
+                    sf::Texture poke_jogador_texture;
+                    sf::Texture poke_pc_texture;
 
-                poke_jogador_texture.loadFromFile(game.poke_atual_jogador.get_imagem());
-                poke_pc_texture.loadFromFile(game.poke_atual_PC.get_imagem());
+                    sf::Text poke_jogador_nome(game.fonte, game.poke_atual_jogador.get_nome());
+                    sf::Text poke_pc_nome(game.fonte, game.poke_atual_PC.get_nome());
 
-                sf::Sprite poke_jogador_sprite(poke_jogador_texture);
-                sf::Sprite poke_pc_sprite(poke_pc_texture);
+                    poke_jogador_texture.loadFromFile(game.poke_atual_jogador.get_imagem());
+                    poke_pc_texture.loadFromFile(game.poke_atual_PC.get_imagem());
 
-                poke_jogador_sprite.setPosition({100.f, 170.f});
-                poke_pc_sprite.setPosition({900.f, 170.f});
+                    sf::Sprite poke_jogador_sprite(poke_jogador_texture);
+                    sf::Sprite poke_pc_sprite(poke_pc_texture);
 
-                // Aqui precisa escalar as imagens dos pokemons
-                auto sz_jogador = poke_jogador_texture.getSize();
-                auto sz_pc = poke_pc_texture.getSize();
+                    poke_jogador_sprite.setPosition({300.f, 350.f});
+                    poke_pc_sprite.setPosition({720.f, 150.f});
 
-                poke_jogador_sprite.setScale({static_cast<float>(300) / sz_jogador.x, static_cast<float>(300) / sz_jogador.y});
-                poke_pc_sprite.setScale({static_cast<float>(300) / sz_pc.x, static_cast<float>(300) / sz_pc.y});
-                
-                adicionar_tipo(game.poke_atual_jogador, poke_jogador_nome);
-                adicionar_tipo(game.poke_atual_PC, poke_pc_nome);
+                    // Aqui precisa escalar as imagens dos pokemons
+                    auto sz_jogador = poke_jogador_texture.getSize();
+                    auto sz_pc = poke_pc_texture.getSize();
 
-                poke_jogador_nome.setPosition({200.f, 500.f});
-                poke_pc_nome.setPosition({900.f, 500.f});
+                    poke_jogador_sprite.setScale({static_cast<float>(250) / sz_jogador.x, static_cast<float>(250) / sz_jogador.y});
+                    poke_pc_sprite.setScale({static_cast<float>(250) / sz_pc.x, static_cast<float>(250) / sz_pc.y});
+                    
+                    adicionar_tipo(game.poke_atual_jogador, poke_jogador_nome);
+                    adicionar_tipo(game.poke_atual_PC, poke_pc_nome);
 
-                btn_batalhar.desenhar(window);
-                window.draw(poke_jogador_sprite);
-                window.draw(poke_pc_sprite);
-                window.draw(poke_jogador_nome);
-                window.draw(poke_pc_nome);
-                if(batalhou){
-                    float tempo = relogio.getElapsedTime().asSeconds();
+                    poke_jogador_nome.setPosition({200.f, 500.f});
+                    poke_pc_nome.setPosition({900.f, 500.f});
 
-                    std::cout << "Tempo: " << tempo << std::endl;
+                    btn_batalhar.desenhar(window);
+                    window.draw(poke_jogador_sprite);
+                    window.draw(poke_pc_sprite);
+                    window.draw(poke_jogador_nome);
+                    window.draw(poke_pc_nome);
 
-                    window.draw(game.resultado_batalha);
+                    if(batalhou){
+                        float tempo = timer_batalha.getElapsedTime().asSeconds();
 
-                    if(tempo >= 2.0f){
-                        std::cout << "PASSOU DOS 2 SEGUNDOS!" << std::endl;
-                        game.fila_jogador.desenfileira(&aux2, &baux2);
-                        time_jogador_aux.enfileira(aux2, &baux2);
-                        game.fila_PC.desenfileira(&aux2, &baux2);
-                        batalhou = false;
+                        std::cout << "Tempo: " << tempo << std::endl;
+
+                        window.draw(game.resultado_batalha);
+
+                        if(tempo >= 1.5f){
+                            std::cout << "PASSOU DOS 1.5 SEGUNDOS!" << std::endl;
+                            game.fila_jogador.desenfileira(&aux2, &baux2);
+                            time_jogador_aux.enfileira(aux2, &baux2);
+                            game.fila_PC.desenfileira(&aux2, &baux2);
+                            batalhou = false;
+                        }
                     }
+
+                } else {
+                    btn_resultado.desenhar(window);
                 }
-                }
-            else{
-                btn_resultado.desenhar(window);
-                }
-                break;
+                    break;
             }
             case Estado::TELA_FINAL: {
                 std::cout << "Tela final" << std::endl;
