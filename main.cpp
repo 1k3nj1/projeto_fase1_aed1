@@ -39,6 +39,9 @@ int main() {
     Botao btn_continuar({500.f, 600.f}, {220.f, 50.f}, "Ir para captura", game.fonte);
     Botao btn_capturar({400.f, 600.f}, {150.f, 50.f}, "Capturar", game.fonte);
     Botao btn_pular({650.f, 600.f}, {150.f, 50.f}, "Pular", game.fonte);
+    Botao btn_terminar({350.f, 600.f}, {150.f, 50.f}, "Terminar", game.fonte);
+    Botao btn_continuar_jogando({750.f, 600.f}, {150.f, 50.f}, "Continuar", game.fonte);
+    Botao btn_proxima_batalha({500.f, 600.f}, {220.f, 50.f}, "Proxima Batalha", game.fonte);
 
     // Carrega tela inicial
     if (game.splash_textura.loadFromFile(CAMINHO_TELA_INICIAL)) {
@@ -46,13 +49,13 @@ int main() {
         auto sz = game.splash_textura.getSize();
         game.splash_sprite.setScale({static_cast<float>(SCREEN_WIDTH) / sz.x, static_cast<float>(SCREEN_HEIGHT) / sz.y});
     }
-
+    
     sf::Clock relogio;
     sf::Clock timer_batalha;
     bool batalhou = false;
 
     while(window.isOpen()) {
-        
+        bool mostrou = false;
         // verificando pressionar o close
         while (const auto event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) {
@@ -106,8 +109,36 @@ int main() {
                     }
                     else if(game.estado_atual == Estado::BATALHA && btn_resultado.clicado(window)){
                         game.estado_atual = Estado::TELA_FINAL;
+                        game.pontuacao_combate.setString("" + std::to_string(game.pontos_jogador) + " X " + std::to_string(game.pontos_PC));
+                        game.pontuacao_combate.setPosition({530.f, 300.f});
+                        game.pontuacao_combate.setScale({3.f, 3.f});
+                        calcular_resultado_combate(game);
                     }
+                    else if(game.estado_atual == Estado::TELA_FINAL){
+                        game.pontos_jogador = 0;
+                        game.pontos_PC = 0;
+                        if(btn_terminar.clicado(window)){
+                            game.estado_atual = Estado::MENU;
+                        }
+                        if(btn_continuar_jogando.clicado(window)){
+                            mostrou = false;
+                            /*while(!time_jogador_aux.vazia()){
+                                PokemonEntity aux;
+                                bool baux;
 
+                                time_jogador_aux.desenfileira(&aux, &baux);
+                                game.fila_jogador.enfileira(aux, &baux);
+                            }
+                            */
+                            randomiza_fila_escolha(game, random_escolha);
+                            randomiza_fila(game);
+                            game.estado_atual = Estado::VER_TIME_PC;
+                        }
+
+                    }
+                    else if(game.estado_atual == Estado::VER_TIME_JOGADOR && btn_proxima_batalha.clicado(window)){
+                        game.estado_atual = Estado::VER_TIME_PC;
+                    }
                     std::cout << "the left button was pressed" << std::endl;
                     std::cout << "mouse x: " << mouseButtonPressed->position.x << std::endl;
                     std::cout << "mouse y: " << mouseButtonPressed->position.y << std::endl;
@@ -140,7 +171,6 @@ int main() {
 
         // limpando o frame anterior
         window.clear(sf::Color(30, 30, 30));
-        bool mostrou = false;
 
         switch (game.estado_atual) {
             case Estado::TELA_INICIAL:
@@ -154,6 +184,10 @@ int main() {
             
             case Estado::VER_TIME_PC:
                 if(!mostrou){
+                    sf::Text texto_titulo(game.fonte, "TIME DO OPONENTE");
+                    texto_titulo.setPosition({300.f, 100.f});
+                    texto_titulo.setScale({2.f, 2.f});
+                    window.draw(texto_titulo);
                     exibir_time_pc(game, window);
                     mostrou = true;
                 }
@@ -169,9 +203,9 @@ int main() {
                     randomiza_fila_escolha(game, random_escolha);
                 }
 
-                if(!game.fila_jogador.cheia()){
+                //if(!game.fila_jogador.cheia()){
                     random_escolha.pegaPrimeiro(paux);
-                }
+                //}
 
                 sf::Text nome_p(game.fonte, paux.get_nome());
                 nome_p.setPosition({600.f, 100.f});
@@ -227,8 +261,8 @@ int main() {
                     adicionar_tipo(game.poke_atual_jogador, poke_jogador_nome);
                     adicionar_tipo(game.poke_atual_PC, poke_pc_nome);
 
-                    poke_jogador_nome.setPosition({200.f, 500.f});
-                    poke_pc_nome.setPosition({900.f, 500.f});
+                    poke_jogador_nome.setPosition({360.f, 600.f});
+                    poke_pc_nome.setPosition({780.f, 400.f});
 
                     btn_batalhar.desenhar(window);
                     window.draw(poke_jogador_sprite);
@@ -259,7 +293,24 @@ int main() {
             }
             case Estado::TELA_FINAL: {
                 std::cout << "Tela final" << std::endl;
+                window.draw(game.resultado_batalha);
+                window.draw(game.pontuacao_combate);
+                btn_terminar.desenhar(window);
+                btn_continuar_jogando.desenhar(window);
+                break;
             }
+            case Estado::VER_TIME_JOGADOR:{
+                if(!mostrou){
+                    sf::Text texto_titulo(game.fonte, "SEU TIME");
+                    texto_titulo.setPosition({500.f, 100.f});
+                    texto_titulo.setScale({2.f, 2.f});
+                    window.draw(texto_titulo);
+                    exibir_time_jogador(game, window);
+                    mostrou = true;
+                }
+                btn_proxima_batalha.desenhar(window);
+            }
+            break;
         }
 
         window.display();
