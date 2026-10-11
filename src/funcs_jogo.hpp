@@ -16,7 +16,8 @@ enum Estado {
     VER_TIME_PC,
     ESCOLHA,
     BATALHA,
-    TELA_FINAL
+    TELA_FINAL,
+    VER_TIME_JOGADOR
 };
 
 // 1 se tipoA vence, 0 caso contrário
@@ -55,16 +56,20 @@ struct GameData{
     // Lógica da Batalha
     int pontos_jogador{0};
     int pontos_PC{0};
+    
     PokemonEntity poke_atual_jogador;
     PokemonEntity poke_atual_PC;
     // bool round_ativo{false};
     //sf::Clock timer_batalha;
     sf::Text resultado_batalha{fonte, ""};
+    sf::Text pontuacao_combate{fonte, ""};
 };
 
 void carregar_dex(GameData& game);
 void randomiza_fila(GameData &game);
 void randomiza_fila_escolha(GameData &game, Fila &f);
 void exibir_time_pc(GameData &game, sf::RenderWindow &w);
+void exibir_time_jogador(GameData &game, sf::RenderWindow &w);
 void adicionar_tipo(PokemonEntity p, sf::Text &tipo_texto);
 void calcular_resultado_batalha(GameData &game);
+void calcular_resultado_combate(GameData &game);
