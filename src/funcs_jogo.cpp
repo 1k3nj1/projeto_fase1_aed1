@@ -144,6 +144,67 @@ void exibir_time_pc(GameData &game, sf::RenderWindow &window){
     window.draw(texto_primeiro);
     window.draw(texto_ultimo);
 }
+void exibir_time_jogador(GameData &game, sf::RenderWindow &window){
+    Fila temp(TAMANHO_TIMES);
+    
+    float posicaoX = 100.f;
+    float posicaoY = 250.f;
+
+    int cont = 0;
+    while(!game.fila_jogador.vazia()){
+        cont++;
+        PokemonEntity aux;
+        bool baux;
+
+        game.fila_jogador.desenfileira(&aux, &baux);
+
+        sf::Text nome_pokemon(game.fonte, aux.get_nome());
+        sf::Texture imagem_poke;
+        imagem_poke.loadFromFile(aux.get_imagem());
+
+        temp.enfileira(aux, &baux);
+
+        sf::Sprite sprite_pokemon(imagem_poke);
+        sprite_pokemon.setPosition({posicaoX, posicaoY});
+        auto sz = imagem_poke.getSize();
+        sprite_pokemon.setScale({static_cast<float>(200) / sz.x, static_cast<float>(200) / sz.y});
+        
+        if(aux.get_tipo() == TipoPokemon::FOGO){
+            nome_pokemon.setFillColor(sf::Color(255,0,0));
+        }
+
+        else if(aux.get_tipo() == TipoPokemon::AGUA){
+            nome_pokemon.setFillColor(sf::Color(0,0,255));
+        }
+
+        else if(aux.get_tipo() == TipoPokemon::PLANTA){
+            nome_pokemon.setFillColor(sf::Color(0,255,0));
+        }
+        // Centraliza o texto no botão
+        nome_pokemon.setPosition({posicaoX, posicaoY + 200.f});
+        
+        posicaoX+=215.f;
+    
+        window.draw(sprite_pokemon);
+        window.draw(nome_pokemon);
+    }
+
+    while(!temp.vazia()){
+        PokemonEntity aux;
+        bool baux;
+
+        temp.desenfileira(&aux, &baux);
+        game.fila_jogador.enfileira(aux, &baux);
+    }
+    sf::Text texto_primeiro(game.fonte, "Primeiro");
+    sf::Text texto_ultimo(game.fonte, "Ultimo");
+
+    texto_primeiro.setPosition({120.f, 210.f});
+    texto_ultimo.setPosition({980.f, 210.f});
+
+    window.draw(texto_primeiro);
+    window.draw(texto_ultimo);
+}
 
 void randomiza_fila_escolha(GameData &game, Fila &f){
 
@@ -202,19 +263,36 @@ void calcular_resultado_batalha(GameData &game){
         game.pontos_jogador++;
         game.resultado_batalha.setString("Voce Venceu Essa Rodada!");
         game.resultado_batalha.setFillColor(sf::Color(0, 255, 0));
+        game.resultado_batalha.setPosition({280.f, 50.f});
     }
     else if(resultado == 2){
         game.resultado_batalha.setString("Empate!");
         game.resultado_batalha.setFillColor(sf::Color(255, 255, 255));
+        game.resultado_batalha.setPosition({520.f, 50.f});
     }
     else if(resultado == 0){
         game.pontos_PC++;
         game.resultado_batalha.setString("Voce Perdeu Essa Rodada!");
         game.resultado_batalha.setFillColor(sf::Color(255, 0, 0));
+        game.resultado_batalha.setPosition({280.f, 50.f});
     }
-    game.resultado_batalha.setPosition({450.f, 300.f});
+    game.resultado_batalha.setScale({2.f, 2.f});
 }
 
-void exibir_resultado_batalha(GameData &game, sf::RenderWindow &window){
-
+void calcular_resultado_combate(GameData &game){
+    if(game.pontos_jogador > game.pontos_PC){
+        game.resultado_batalha.setString("Voce Venceu este Combate!");
+        game.resultado_batalha.setFillColor(sf::Color(0, 255, 0));
+        game.resultado_batalha.setPosition({280.f, 100.f});
+    }
+    else if(game.pontos_jogador < game.pontos_PC){
+        game.resultado_batalha.setString("Voce Perdeu este Combate!");
+        game.resultado_batalha.setFillColor(sf::Color(255, 0, 0));
+        game.resultado_batalha.setPosition({280.f, 100.f});
+    }
+    else{
+        game.resultado_batalha.setString("Empate!");
+        game.resultado_batalha.setFillColor(sf::Color(255, 255, 255));
+        game.resultado_batalha.setPosition({520.f, 100.f});
+    }
 }
