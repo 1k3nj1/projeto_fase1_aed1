@@ -20,12 +20,12 @@ int main() {
     GameData game;
 
     carregar_dex(game);
-    randomiza_fila(game);
+    bool ja_randomizou = false;
+    // randomiza_fila(game);
 
-    Fila random_escolha(6);
-    randomiza_fila_escolha(game, random_escolha);
-
-    Fila time_jogador_aux(6);
+    Fila random_escolha(QTD_POKEMONS);
+    Fila time_jogador_aux(TAMANHO_TIMES);
+    // randomiza_fila_escolha(game, random_escolha);
 
     // Fonte temporária (ou não)
     if (!game.fonte.openFromFile("src/arial.ttf")) {
@@ -102,7 +102,9 @@ int main() {
                     else if(game.estado_atual == Estado::BATALHA && btn_batalhar.clicado(window)){
                         std::cout << "Botao de batalhar clicado" << std::endl;
 
-                        calcular_resultado_batalha(game);
+                        if(!batalhou){
+                            calcular_resultado_batalha(game);
+                        }
 
                         timer_batalha.restart();
                         batalhou = true;
@@ -117,9 +119,12 @@ int main() {
                     else if(game.estado_atual == Estado::TELA_FINAL){
                         game.pontos_jogador = 0;
                         game.pontos_PC = 0;
+
                         if(btn_terminar.clicado(window)){
+                            ja_randomizou = false;
                             game.estado_atual = Estado::MENU;
                         }
+
                         if(btn_continuar_jogando.clicado(window)){
                             mostrou = false;
                             /*while(!time_jogador_aux.vazia()){
@@ -130,8 +135,8 @@ int main() {
                                 game.fila_jogador.enfileira(aux, &baux);
                             }
                             */
+                            randomiza_fila_pc(game);
                             randomiza_fila_escolha(game, random_escolha);
-                            randomiza_fila(game);
                             game.estado_atual = Estado::VER_TIME_PC;
                         }
 
@@ -159,6 +164,12 @@ int main() {
                 auto sz = game.textura_atual.getSize();
                 game.sprite_atual.setScale({static_cast<float>(SCREEN_WIDTH) / sz.x, static_cast<float>(SCREEN_HEIGHT) / sz.y});
             }
+
+            if(!ja_randomizou){
+                randomiza_fila_pc(game);
+                randomiza_fila_escolha(game, random_escolha);
+                ja_randomizou = true;
+            }
         }
 
         if(game.estado_atual == Estado::BATALHA){
@@ -168,6 +179,16 @@ int main() {
                 game.sprite_atual.setScale({static_cast<float>(SCREEN_WIDTH) / sz.x, static_cast<float>(SCREEN_HEIGHT) / sz.y});
             }
         }
+        
+        /*
+        if(game.estado_atual == Estado::TELA_FINAL){
+            if (game.textura_atual.loadFromFile(CAMINHO_TELA_FINAL)) {
+                game.sprite_atual.setTexture(game.textura_atual, true);
+                auto sz = game.textura_atual.getSize();
+                game.sprite_atual.setScale({static_cast<float>(SCREEN_WIDTH) / sz.x, static_cast<float>(SCREEN_HEIGHT) / sz.y});
+            }
+        }
+        */
 
         // limpando o frame anterior
         window.clear(sf::Color(30, 30, 30));
@@ -291,7 +312,13 @@ int main() {
                 }
                     break;
             }
+
             case Estado::TELA_FINAL: {
+                /*
+                game.sprite_atual.setPosition({0.0, 0.0});
+                window.draw(game.sprite_atual);
+                */
+
                 std::cout << "Tela final" << std::endl;
                 window.draw(game.resultado_batalha);
                 window.draw(game.pontuacao_combate);
@@ -299,6 +326,7 @@ int main() {
                 btn_continuar_jogando.desenhar(window);
                 break;
             }
+
             case Estado::VER_TIME_JOGADOR:{
                 if(!mostrou){
                     sf::Text texto_titulo(game.fonte, "SEU TIME");

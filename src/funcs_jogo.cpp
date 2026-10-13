@@ -1,6 +1,13 @@
 #include "funcs_jogo.hpp"
 #include <cstdlib>
 
+/*
+    Função para calcular qual pokemon teve vantagem no confronto
+    Retorna:
+    1 - caso Pokemon do jogador tenha vantagem
+    2 - caso Pokemon do computador tenha vantagem
+    0 - caso de empate
+*/
 int calcula_vantagem(int tipoA, int tipoB) {
     if (tipoA == FOGO && tipoB == PLANTA) return 1;
     if (tipoA == PLANTA && tipoB == AGUA) return 1;
@@ -11,6 +18,9 @@ int calcula_vantagem(int tipoA, int tipoB) {
     return 0;
 }
 
+/*
+    Construtor dos structs Botão
+*/
 Botao::Botao(sf::Vector2f pos, sf::Vector2f size, const std::string& label, const sf::Font& font):texto(font, label, 20) {
     box.setPosition(pos);
     box.setSize(size);
@@ -23,6 +33,9 @@ Botao::Botao(sf::Vector2f pos, sf::Vector2f size, const std::string& label, cons
     texto.setPosition({pos.x + 15.f, pos.y + 10.f});
 }
 
+/*
+    Função que verifica se o botão foi clicado
+*/
 bool Botao::clicado(const sf::RenderWindow& window) const {
     sf::Vector2i pixelPos = sf::Mouse::getPosition(window);    
     sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
@@ -53,7 +66,7 @@ void carregar_dex(GameData& game){
 }
 
 // criando filas aleatórias
-void randomiza_fila(GameData &game){
+void randomiza_fila_pc(GameData &game){
     //std::vector<PokemonEntity> copia;
     PokemonEntity copia[QTD_POKEMONS];
 
@@ -144,6 +157,7 @@ void exibir_time_pc(GameData &game, sf::RenderWindow &window){
     window.draw(texto_primeiro);
     window.draw(texto_ultimo);
 }
+
 void exibir_time_jogador(GameData &game, sf::RenderWindow &window){
     Fila temp(TAMANHO_TIMES);
     
@@ -206,6 +220,7 @@ void exibir_time_jogador(GameData &game, sf::RenderWindow &window){
     window.draw(texto_ultimo);
 }
 
+// Randomizando a fila das escolhas possíveis do jogador no estado de CAPTURA
 void randomiza_fila_escolha(GameData &game, Fila &f){
 
     PokemonEntity copia[QTD_POKEMONS];
@@ -246,6 +261,7 @@ void randomiza_fila_escolha(GameData &game, Fila &f){
     */
 }
 
+// Define cor do texto dependendo do tipo do Pokemon
 void adicionar_tipo(PokemonEntity p, sf::Text &tipo_texto){
     if(p.get_tipo() == TipoPokemon::FOGO){
         tipo_texto.setFillColor(sf::Color(255, 0, 0));
@@ -257,6 +273,8 @@ void adicionar_tipo(PokemonEntity p, sf::Text &tipo_texto){
         tipo_texto.setFillColor(sf::Color(0, 0, 255));
     }
 }
+
+// Exibe texto com base no resultado do confronto
 void calcular_resultado_batalha(GameData &game){
     int resultado = calcula_vantagem(game.poke_atual_jogador.get_tipo(), game.poke_atual_PC.get_tipo());
     if(resultado == 1){
@@ -279,6 +297,7 @@ void calcular_resultado_batalha(GameData &game){
     game.resultado_batalha.setScale({2.f, 2.f});
 }
 
+// Exibe texto com base no resultado final da batalha
 void calcular_resultado_combate(GameData &game){
     if(game.pontos_jogador > game.pontos_PC){
         game.resultado_batalha.setString("Voce Venceu este Combate!");

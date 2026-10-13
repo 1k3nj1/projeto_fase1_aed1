@@ -66,7 +66,7 @@ struct GameData{
 };
 
 void carregar_dex(GameData& game);
-void randomiza_fila(GameData &game);
+void randomiza_fila_pc(GameData &game);
 void randomiza_fila_escolha(GameData &game, Fila &f);
 void exibir_time_pc(GameData &game, sf::RenderWindow &w);
 void exibir_time_jogador(GameData &game, sf::RenderWindow &w);
