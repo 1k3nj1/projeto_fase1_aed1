@@ -12,7 +12,7 @@
 int main() {
     srand(time(nullptr));
 
-    sf::RenderWindow window(sf::VideoMode({SCREEN_WIDTH, SCREEN_HEIGHT}), "Pokemon Fila emulator", sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode({SCREEN_WIDTH, SCREEN_HEIGHT}), "Pokemon Fila simulator", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(60);
 
     window.setView(sf::View(sf::FloatRect({0.f, 0.f}, {static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT)})));

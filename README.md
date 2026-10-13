@@ -1,5 +1,5 @@
 
-# Pokemon Fila emulator (mudar isso aqui)
+# Pokemon Fila simulator (mudar isso aqui)
 
 Um mini jogo simulador de batalhas Pokemon 5 vs 5 
 
@@ -14,10 +14,40 @@ Em ambiente linux, instale e configure o SFML 3. Após isso, basta utilizar o co
 
 para compilar e executar o jogo.
 
+## Regras básicas do jogo (melhorar depois)
+
+- O jogador deverá escolher entre 5 Pokemons para compor seu time;
+- O time escolhido pelo jogador lutará contra 5 Pokemons do computador, escolhidos aleatoriamente;
+- Antes de escolher o seu time, o jogador poderá ver o time do computador pelo tempo que desejar;
+- Nas balhas, a lógica dos enfrentamentos é a seguinte:
+  - O n-ésimo Pokemon o jogador, enfrenta o n-ésimo Pokemon do computador, até que todos os Pokemons tenha batalhado exatamente 1 vez;
+  - Para determinar o vencerdor, se utiliza a lógica de superefetividade dos tipos dos Pokemons:
+    - PLANTA vence ÁGUA;
+    - ÁGUA vence FOGO;
+    - FOGO vence PLANTA;
+  - Cada vitória adiciona 1 ponto ao time do Pokemon vencedor, e em caso de empate ou derrota, 0 pontos são adicionados;
+- Vence o time que tiver mais pontos. Há a possibilidade do empate.
+
 
 ## Estruturação do projeto
 
-(para fazer depois) descrever estrutura do projeto, como divisão de arquivos e diretórios 
+O projeto possui três divisões de diretórios principais:
+
+| Diretório | Descrição |
+| --- | --- |
+| **src** | Arquivos relacionados à lógica do jogo e à estrutura de dados |
+| **imagens** | Contém todas as imagens utilizadas no projeto |
+| **Raiz** | Contém arquivo main e instruções de execução |
+
+### Arquivos no diretório src
+
+| Arquivo | Descrição |
+| --- | --- |
+| `arial.ttf` | Fonte utilizada nos textos |
+| `EFINITIONS.hpp` | Definições utilizadas para as imagens e tamanhos das filas |
+| `Fila.hpp` / `Fila.cpp` | Definições e implementações da fila |
+| `PokemonEntity.hpp` / `PokemonEntity.cpp` | Definições e implementações do PokemonEntity, usado como Node na fila |
+| `funcs_jogo.hpp` / `funcs_jogo.cpp` | Definições e implementações de estruturas e funções utilizadas para a lógica do jogo |
 
 
 ## Funcionalidades
